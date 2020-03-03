@@ -1,0 +1,33 @@
+<!--index.wxml-->
+<audio src="{{src}}" id="myAudio"></audio>
+<view class="wrapper">
+  <view>{{refer}}</view>
+  <view id="examSec" wx:if="{{!isFinish}}">
+    <view class="tip">请根据片假名选出对应的平假名：</view>
+    <view id="hitSec">
+      <view id="text_hint" bind:tap="text_hint"></view>
+      <view id="audio_hint" bind:tap="audio_hint">
+        <text class="{{isPlay ? 'voicePlay' : ''}}"></text>
+      </view> 
+    </view>
+    <view id="questionSec">
+        <view id="question_romaji" class="{{isHit? '': 'hidden' }}">[{{currentRomaji}}]</view>
+        <view id="question">{{currentKatakana}}</view>
+        <view id="question_analyze" class="{{related? '' : 'hidden'}}">
+          <text>*辨析：</text>
+          <text><block wx:for="{{related}}" wx:key="index">{{item.katakana}}/{{item.hiragana}}[{{item.romaji}}]  </block></text>
+        </view>
+    </view>
+    <view id="optionsSec">
+      <block wx:for="{{currentOptions}}" wx:key="index">
+        <button style="width:90%" disabled="{{ isDisabled }}" class="btn {{ selectId == item.id ? (isCorrect ? 'correct' : 'error') : (selectId != null  && item.id == examId ? 'correct' : '') }}" data-index="{{currentIndex}}" data-value="{{item.id}}" bind:tap="get_answer">{{item.hiragana}} {{ selectId == item.id ? (isCorrect ? '' : '['+ item.romaji +']') : '' }} </button>
+      </block>
+    </view>
+  </view>
+  <view id="resultSec" wx:if="{{isFinish}}">
+      <view id="rate_tip" class="tip">本轮测试结束,正确率</view>
+      <view id="rate">{{rate}}%</view>
+      <button style="width:90%" bind:tap="restart" class="btn">再来一局</button>
+	  <view class="tip" bind:tap="redo" wx:if="{{rate == 100 ? false : true }}">重做错题</view>
+  </view>
+</view>
